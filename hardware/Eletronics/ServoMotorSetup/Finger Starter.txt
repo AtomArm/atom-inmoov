@@ -1,0 +1,49 @@
+#include<Servo.h>
+#include<SoftwareSerial.h>
+
+SoftwareSerial mySerial(10, 11);    //Rx, Tx
+
+Servo myServo;
+
+int ServoPos=0;
+
+void setup()
+{
+  mySerial.begin(9600);   //Set Baudrate of bluetooth to 9600
+  myServo.attach(3);    //Connect Servo to Pin 3
+  myServo.write(ServoPos);
+}
+
+void loop()
+{
+  int data,i;
+  if(mySerial.available())
+    {
+      data = mySerial.parseInt();
+      if(data == 0)
+        {
+          if(ServoPos == 90)
+            {
+              for(i=90; i>=0; i--)
+                {
+                  myServo.write(i);
+                  delay(10);
+                }
+                ServoPos = 0;
+            }
+        }
+
+      else if(data == 1)
+        {
+          if(ServoPos == 0)
+            {
+              for(i=0; i<=90; i++)
+                {
+                  myServo.write(i);
+                  delay(10);
+                }
+                ServoPos = 90;
+            }
+        }
+    }
+}
